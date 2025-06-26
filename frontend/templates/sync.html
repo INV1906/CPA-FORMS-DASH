@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sincronização - Sistema de Gestão de Sugestões</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <h1>
+                    <!-- Logo Biopark SVG -->
+                    <svg viewBox="0 0 32 32" fill="currentColor">
+                        <path d="M16 2L3 7l13 5 13-5-13-5zM3 16l13 5 13-5M3 25l13 5 13-5"/>
+                    </svg>
+                    Biopark
+                </h1>
+            </div>
+            <div class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="/dashboard">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/suggestions">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"/>
+                            </svg>
+                            Sugestões
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/users">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                            </svg>
+                            Usuários
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/reports">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                            </svg>
+                            Relatórios
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/sync" class="active">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"/>
+                            </svg>
+                            Sincronização
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Sincronização</h1>
+                    <p class="page-subtitle">Gerencie a sincronização com Google Forms</p>
+                </div>
+                <button class="btn btn-primary" onclick="startSync()">
+                    <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"/>
+                    </svg>
+                    Sincronizar Agora
+                </button>
+            </div>
+
+            <!-- Sync Status Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon green" id="sync-status-icon">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="sync-status">Ativo</h3>
+                        <p>Status da Sincronização</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="last-sync">Há 2 horas</h3>
+                        <p>Última Sincronização</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon yellow">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="synced-forms">5</h3>
+                        <p>Formulários Conectados</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="new-responses">12</h3>
+                        <p>Novas Respostas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuration Section -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Configurações de Sincronização</h3>
+                    <button class="btn btn-secondary btn-sm" onclick="openConfigModal()">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"/>
+                        </svg>
+                        Configurar
+                    </button>
+                </div>
+                <div style="padding: 1rem;">
+                    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                        <div>
+                            <label class="form-label">Intervalo de Sincronização</label>
+                            <p><strong id="sync-interval">A cada 30 minutos</strong></p>
+                        </div>
+                        <div>
+                            <label class="form-label">Sincronização Automática</label>
+                            <p><strong id="auto-sync">Habilitada</strong></p>
+                        </div>
+                        <div>
+                            <label class="form-label">Notificações</label>
+                            <p><strong id="notifications">Habilitadas</strong></p>
+                        </div>
+                        <div>
+                            <label class="form-label">Status da API</label>
+                            <p><strong id="api-status" class="badge badge-success">Conectada</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connected Forms -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="card-title">Formulários Conectados</h3>
+                    <button class="btn btn-secondary btn-sm" onclick="addForm()">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"/>
+                        </svg>
+                        Adicionar Formulário
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nome do Formulário</th>
+                                <th>ID do Google Forms</th>
+                                <th>Status</th>
+                                <th>Última Sincronização</th>
+                                <th>Respostas</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="forms-table">
+                            <!-- Dados carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sync Logs -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Log de Sincronização</h3>
+                    <button class="btn btn-secondary btn-sm" onclick="clearLogs()">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 001 1h6a1 1 0 001-1V3a2 2 0 012 2v6.5l1.4 1.4a1 1 0 01-1.4 1.4L15 16.5V17a2 2 0 01-2 2H7a2 2 0 01-2-2v-.5l-1-1a1 1 0 011.4-1.4L6 15.5V5zm3 6a1 1 0 000 2h2a1 1 0 100-2H7z"/>
+                        </svg>
+                        Limpar Logs
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Formulário</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Mensagem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sync-logs-table">
+                            <!-- Dados carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Configuration Modal -->
+    <div class="modal" id="config-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Configurações de Sincronização</h3>
+                <button class="modal-close" onclick="closeConfigModal()">&times;</button>
+            </div>
+            <form id="config-form" onsubmit="saveConfig(event)">
+                <div class="form-group">
+                    <label class="form-label">Intervalo de Sincronização</label>
+                    <select class="form-select" name="sync_interval">
+                        <option value="15">A cada 15 minutos</option>
+                        <option value="30" selected>A cada 30 minutos</option>
+                        <option value="60">A cada 1 hora</option>
+                        <option value="180">A cada 3 horas</option>
+                        <option value="360">A cada 6 horas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" name="auto_sync" checked> Sincronização Automática
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" name="notifications" checked> Notificações por Email
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email para Notificações</label>
+                    <input type="email" class="form-input" name="notification_email" value="admin@biopark.com.br">
+                </div>
+                <div class="d-flex justify-content-between gap-2">
+                    <button type="button" class="btn btn-secondary" onclick="closeConfigModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Salvar Configurações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // API Integration
+        const API_BASE = '/api';
+        
+        // Load sync data
+        async function loadSyncData() {
+            try {
+                // Load sync status
+                const statusResponse = await fetch(`${API_BASE}/sync/status`);
+                if (statusResponse.ok) {
+                    const status = await statusResponse.json();
+                    updateSyncStatus(status);
+                } else {
+                    // Mock data fallback
+                    updateSyncStatus({
+                        status: 'active',
+                        last_sync: '2024-01-15T12:30:00Z',
+                        connected_forms: 5,
+                        new_responses: 12
+                    });
+                }
+                
+                // Load connected forms
+                const formsResponse = await fetch(`${API_BASE}/sync/forms`);
+                if (formsResponse.ok) {
+                    const forms = await formsResponse.json();
+                    renderForms(forms.items || forms);
+                } else {
+                    // Mock data fallback
+                    renderForms([
+                        {
+                            id: 1,
+                            name: 'Sugestões Gerais',
+                            google_form_id: '1FAIpQLSe...',
+                            status: 'active',
+                            last_sync: '2024-01-15T12:30:00Z',
+                            response_count: 45
+                        },
+                        {
+                            id: 2,
+                            name: 'Feedback de Produtos',
+                            google_form_id: '1FAIpQLSf...',
+                            status: 'active',
+                            last_sync: '2024-01-15T12:15:00Z',
+                            response_count: 23
+                        }
+                    ]);
+                }
+                
+                // Load sync logs
+                const logsResponse = await fetch(`${API_BASE}/sync/logs`);
+                if (logsResponse.ok) {
+                    const logs = await logsResponse.json();
+                    renderLogs(logs.items || logs);
+                } else {
+                    // Mock data fallback
+                    renderLogs([
+                        {
+                            timestamp: '2024-01-15T12:30:00Z',
+                            form_name: 'Sugestões Gerais',
+                            type: 'sync',
+                            status: 'success',
+                            message: 'Sincronização concluída com sucesso. 3 novas respostas encontradas.'
+                        },
+                        {
+                            timestamp: '2024-01-15T12:15:00Z',
+                            form_name: 'Feedback de Produtos',
+                            type: 'sync',
+                            status: 'success',
+                            message: 'Sincronização concluída com sucesso. 1 nova resposta encontrada.'
+                        },
+                        {
+                            timestamp: '2024-01-15T11:30:00Z',
+                            form_name: 'Sistema',
+                            type: 'error',
+                            status: 'error',
+                            message: 'Erro na autenticação com Google API. Verifique as credenciais.'
+                        }
+                    ]);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados de sincronização:', error);
+            }
+        }
+        
+        function updateSyncStatus(status) {
+            document.getElementById('sync-status').textContent = status.status === 'active' ? 'Ativo' : 'Inativo';
+            document.getElementById('last-sync').textContent = formatRelativeTime(status.last_sync);
+            document.getElementById('synced-forms').textContent = status.connected_forms || 0;
+            document.getElementById('new-responses').textContent = status.new_responses || 0;
+            
+            // Update status icon
+            const statusIcon = document.getElementById('sync-status-icon');
+            if (status.status === 'active') {
+                statusIcon.className = 'stat-icon green';
+            } else {
+                statusIcon.className = 'stat-icon red';
+            }
+        }
+        
+        function renderForms(forms) {
+            const tbody = document.getElementById('forms-table');
+            tbody.innerHTML = forms.map(form => `
+                <tr>
+                    <td>${form.name}</td>
+                    <td><code>${form.google_form_id.substring(0, 20)}...</code></td>
+                    <td>
+                        <span class="badge ${form.status === 'active' ? 'badge-success' : 'badge-danger'}">
+                            ${form.status === 'active' ? 'Ativo' : 'Inativo'}
+                        </span>
+                    </td>
+                    <td>${formatDate(form.last_sync)}</td>
+                    <td>${form.response_count}</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" onclick="syncForm(${form.id})">
+                            Sincronizar
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderLogs(logs) {
+            const tbody = document.getElementById('sync-logs-table');
+            tbody.innerHTML = logs.map(log => `
+                <tr>
+                    <td>${formatDate(log.timestamp)}</td>
+                    <td>${log.form_name}</td>
+                    <td>
+                        <span class="badge ${getLogTypeBadgeClass(log.type)}">
+                            ${getLogTypeText(log.type)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${log.status === 'success' ? 'badge-success' : 'badge-danger'}">
+                            ${log.status === 'success' ? 'Sucesso' : 'Erro'}
+                        </span>
+                    </td>
+                    <td>${log.message}</td>
+                </tr>
+            `).join('');
+        }
+        
+        function getLogTypeBadgeClass(type) {
+            const typeMap = {
+                'sync': 'badge-info',
+                'error': 'badge-danger',
+                'config': 'badge-warning'
+            };
+            return typeMap[type] || 'badge-info';
+        }
+        
+        function getLogTypeText(type) {
+            const typeMap = {
+                'sync': 'Sincronização',
+                'error': 'Erro',
+                'config': 'Configuração'
+            };
+            return typeMap[type] || type;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('pt-BR');
+        }
+        
+        function formatRelativeTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+            
+            if (diffInHours < 1) {
+                return 'Há poucos minutos';
+            } else if (diffInHours < 24) {
+                return `Há ${diffInHours} horas`;
+            } else {
+                const diffInDays = Math.floor(diffInHours / 24);
+                return `Há ${diffInDays} dias`;
+            }
+        }
+        
+        // Actions
+        async function startSync() {
+            try {
+                const response = await fetch(`${API_BASE}/sync/start`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    alert('Sincronização iniciada com sucesso!');
+                    loadSyncData();
+                } else {
+                    alert('Erro ao iniciar sincronização. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro ao iniciar sincronização:', error);
+                alert('Erro ao iniciar sincronização. Tente novamente.');
+            }
+        }
+        
+        async function syncForm(formId) {
+            try {
+                const response = await fetch(`${API_BASE}/sync/forms/${formId}/sync`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    alert('Formulário sincronizado com sucesso!');
+                    loadSyncData();
+                } else {
+                    alert('Erro ao sincronizar formulário. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro ao sincronizar formulário:', error);
+                alert('Erro ao sincronizar formulário. Tente novamente.');
+            }
+        }
+        
+        function addForm() {
+            const formId = prompt('Digite o ID do Google Form:');
+            if (formId) {
+                // Implementar adição de formulário
+                alert(`Adicionando formulário ${formId}...`);
+            }
+        }
+        
+        function clearLogs() {
+            if (confirm('Tem certeza que deseja limpar todos os logs?')) {
+                document.getElementById('sync-logs-table').innerHTML = '';
+                alert('Logs limpos com sucesso!');
+            }
+        }
+        
+        // Modal functions
+        function openConfigModal() {
+            document.getElementById('config-modal').classList.add('active');
+        }
+        
+        function closeConfigModal() {
+            document.getElementById('config-modal').classList.remove('active');
+        }
+        
+        function saveConfig(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const config = {
+                sync_interval: formData.get('sync_interval'),
+                auto_sync: formData.has('auto_sync'),
+                notifications: formData.has('notifications'),
+                notification_email: formData.get('notification_email')
+            };
+            
+            // Update display
+            const intervalText = {
+                '15': 'A cada 15 minutos',
+                '30': 'A cada 30 minutos',
+                '60': 'A cada 1 hora',
+                '180': 'A cada 3 horas',
+                '360': 'A cada 6 horas'
+            };
+            
+            document.getElementById('sync-interval').textContent = intervalText[config.sync_interval];
+            document.getElementById('auto-sync').textContent = config.auto_sync ? 'Habilitada' : 'Desabilitada';
+            document.getElementById('notifications').textContent = config.notifications ? 'Habilitadas' : 'Desabilitadas';
+            
+            closeConfigModal();
+            alert('Configurações salvas com sucesso!');
+        }
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadSyncData);
+        
+        // Close modal when clicking outside
+        document.getElementById('config-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeConfigModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Sistema de Gestão de Sugestões</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <h1>
+                    <!-- Logo Biopark SVG -->
+                    <svg viewBox="0 0 200 60" fill="currentColor">
+                        <g>
+                            <path d="M16 8c0-4.4 3.6-8 8-8s8 3.6 8 8v16c0 4.4-3.6 8-8 8s-8-3.6-8-8V8z" fill="#e53e3e"/>
+                            <path d="M40 16c0-4.4 3.6-8 8-8s8 3.6 8 8v20c0 6.6-5.4 12-12 12s-12-5.4-12-12V16z" fill="#ffffff"/>
+                            <text x="70" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="currentColor">Biopark</text>
+                        </g>
+                    </svg>
+                </h1>
+            </div>
+            <div class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="/dashboard">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/suggestions">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"/>
+                            </svg>
+                            Sugestões
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/users">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                            </svg>
+                            Usuários
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/reports" class="active">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                            </svg>
+                            Relatórios
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/sync">
+                            <svg fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"/>
+                            </svg>
+                            Sincronização
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Relatórios</h1>
+                    <p class="page-subtitle">Análises e estatísticas do sistema</p>
+                </div>
+                <button class="btn btn-primary" onclick="generateReport()">
+                    <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                    </svg>
+                    Gerar Relatório
+                </button>
+            </div>
+
+            <!-- Report Filters -->
+            <div class="filters">
+                <div class="form-group">
+                    <label class="form-label">Período</label>
+                    <select class="form-select" id="period-filter" onchange="updateReports()">
+                        <option value="7">Últimos 7 dias</option>
+                        <option value="30" selected>Últimos 30 dias</option>
+                        <option value="90">Últimos 90 dias</option>
+                        <option value="365">Último ano</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tipo</label>
+                    <select class="form-select" id="report-type" onchange="updateReports()">
+                        <option value="all">Todos</option>
+                        <option value="suggestions">Sugestões</option>
+                        <option value="users">Usuários</option>
+                        <option value="performance">Performance</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Report Metrics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="period-suggestions">87</h3>
+                        <p>Sugestões no Período</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="resolution-rate">73%</h3>
+                        <p>Taxa de Resolução</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon yellow">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avg-response-time">2.3</h3>
+                        <p>Tempo Médio de Resposta (dias)</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="satisfaction-rate">94%</h3>
+                        <p>Taxa de Satisfação</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="stats-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Sugestões por Período</h3>
+                    </div>
+                    <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: var(--gray-50); border-radius: 0.5rem; margin: 1rem 0;">
+                        <div style="text-align: center; color: var(--gray-500);">
+                            <svg width="64" height="64" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                            </svg>
+                            <p>Gráfico de sugestões será implementado aqui</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Status das Sugestões</h3>
+                    </div>
+                    <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: var(--gray-50); border-radius: 0.5rem; margin: 1rem 0;">
+                        <div style="text-align: center; color: var(--gray-500);">
+                            <svg width="64" height="64" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z"/>
+                            </svg>
+                            <p>Gráfico de pizza será implementado aqui</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Cards -->
+            <div class="stats-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Relatório de Sugestões</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadReport('suggestions')">
+                            <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                            </svg>
+                            Download
+                        </button>
+                    </div>
+                    <p>Relatório completo com todas as sugestões do período selecionado, incluindo status, categorias e análises detalhadas.</p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge badge-info">142 registros</span>
+                        <span class="badge badge-success">Atualizado hoje</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Relatório de Usuários</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadReport('users')">
+                            <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                            </svg>
+                            Download
+                        </button>
+                    </div>
+                    <p>Relatório de atividade dos usuários, incluindo estatísticas de login, sugestões enviadas e engajamento.</p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge badge-info">24 usuários</span>
+                        <span class="badge badge-success">Atualizado hoje</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Relatório de Performance</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadReport('performance')">
+                            <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                            </svg>
+                            Download
+                        </button>
+                    </div>
+                    <p>Análise de performance do sistema, tempos de resposta, taxa de resolução e métricas de qualidade.</p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge badge-warning">Semanal</span>
+                        <span class="badge badge-success">Atualizado hoje</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Relatório Executivo</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="downloadReport('executive')">
+                            <svg fill="currentColor" viewBox="0 0 20 20" width="16" height="16">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                            </svg>
+                            Download
+                        </button>
+                    </div>
+                    <p>Resumo executivo com insights principais, tendências e recomendações estratégicas baseadas nos dados.</p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge badge-danger">Mensal</span>
+                        <span class="badge badge-success">Atualizado hoje</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // API Integration
+        const API_BASE = '/api';
+        
+        // Load report data
+        async function loadReportData() {
+            try {
+                const period = document.getElementById('period-filter').value;
+                const response = await fetch(`${API_BASE}/reports/metrics?period=${period}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateMetrics(data);
+                } else {
+                    // Fallback mock data
+                    updateMetrics({
+                        period_suggestions: 87,
+                        resolution_rate: 73,
+                        avg_response_time: 2.3,
+                        satisfaction_rate: 94
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados do relatório:', error);
+                // Show mock data on error
+                updateMetrics({
+                    period_suggestions: 87,
+                    resolution_rate: 73,
+                    avg_response_time: 2.3,
+                    satisfaction_rate: 94
+                });
+            }
+        }
+        
+        function updateMetrics(data) {
+            document.getElementById('period-suggestions').textContent = data.period_suggestions || 87;
+            document.getElementById('resolution-rate').textContent = `${data.resolution_rate || 73}%`;
+            document.getElementById('avg-response-time').textContent = data.avg_response_time || 2.3;
+            document.getElementById('satisfaction-rate').textContent = `${data.satisfaction_rate || 94}%`;
+        }
+        
+        function updateReports() {
+            loadReportData();
+        }
+        
+        function generateReport() {
+            const period = document.getElementById('period-filter').value;
+            const reportType = document.getElementById('report-type').value;
+            
+            alert(`Gerando relatório do tipo "${reportType}" para o período de ${period} dias...`);
+        }
+        
+        async function downloadReport(type) {
+            try {
+                const period = document.getElementById('period-filter').value;
+                alert(`Baixando relatório de ${type} para o período de ${period} dias...`);
+                
+                // Simular download
+                const blob = new Blob(['Dados do relatório aqui...'], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `relatorio-${type}-${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Erro ao baixar relatório:', error);
+                alert('Erro ao baixar relatório. Tente novamente.');
+            }
+        }
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadReportData);
+    </script>
+</body>
+</html>

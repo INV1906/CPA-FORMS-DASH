@@ -119,72 +119,141 @@ app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(system.router, prefix="/api/system", tags=["System"])
 app.include_router(sync.router, prefix="/api", tags=["Sincronização"])
 
-# Root endpoint
+# Frontend routes
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve main frontend page"""
-    frontend_file = frontend_dir / "index.html"
+    frontend_file = frontend_dir / "templates" / "index.html"
     if frontend_file.exists():
         return FileResponse(frontend_file)
-    
-    return HTMLResponse(content="""
+    return HTMLResponse(content=get_fallback_html())
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page():
+    """Serve login page"""
+    frontend_file = frontend_dir / "templates" / "login.html"
+    if frontend_file.exists():
+        return FileResponse(frontend_file)
+    return HTMLResponse(content=get_fallback_html("Login"))
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def dashboard():
+    """Serve dashboard page"""
+    frontend_file = frontend_dir / "templates" / "dashboard.html"
+    if frontend_file.exists():
+        return FileResponse(frontend_file)
+    return HTMLResponse(content=get_fallback_html("Dashboard"))
+
+@app.get("/suggestions", response_class=HTMLResponse)
+async def suggestions_page():
+    """Serve suggestions management page"""
+    frontend_file = frontend_dir / "templates" / "suggestions.html"
+    if frontend_file.exists():
+        return FileResponse(frontend_file)
+    return HTMLResponse(content=get_fallback_html("Gestão de Sugestões"))
+
+@app.get("/users", response_class=HTMLResponse)
+async def users_page():
+    """Serve users management page"""
+    frontend_file = frontend_dir / "templates" / "users.html"
+    if frontend_file.exists():
+        return FileResponse(frontend_file)
+    return HTMLResponse(content=get_fallback_html("Gestão de Usuários"))
+
+@app.get("/reports", response_class=HTMLResponse)
+async def reports_page():
+    """Serve reports page"""
+    frontend_file = frontend_dir / "templates" / "reports.html"
+    if frontend_file.exists():
+        return FileResponse(frontend_file)
+    return HTMLResponse(content=get_fallback_html("Relatórios"))
+
+@app.get("/sync", response_class=HTMLResponse)
+async def sync_page():
+    """Serve synchronization page"""
+    frontend_file = frontend_dir / "templates" / "sync.html"
+    if frontend_file.exists():
+        return FileResponse(frontend_file)
+    return HTMLResponse(content=get_fallback_html("Sincronização"))
+
+@app.get("/settings", response_class=HTMLResponse)
+async def settings_page():
+    """Serve settings page"""
+    frontend_file = frontend_dir / "templates" / "settings.html"
+    if frontend_file.exists():
+        return FileResponse(frontend_file)
+    return HTMLResponse(content=get_fallback_html("Configurações"))
+
+@app.get("/test", response_class=HTMLResponse)
+async def test_page():
+    """Serve test page for functionality verification"""
+    frontend_file = frontend_dir / "templates" / "test.html"
+    if frontend_file.exists():
+        return FileResponse(frontend_file)
+    return HTMLResponse(content=get_fallback_html("Teste de Funcionalidades"))
+
+def get_fallback_html(page_title="Sistema de Gestão de Sugestões"):
+    """Generate fallback HTML when template files are not found"""
+    return """
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Sistema de Gestão de Sugestões</title>
+        <title>{}</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-            body { 
+            body {{ 
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 margin: 0; padding: 0; min-height: 100vh;
                 display: flex; align-items: center; justify-content: center;
-            }
-            .container {
+            }}
+            .container {{
                 background: white; border-radius: 20px; padding: 40px;
                 box-shadow: 0 20px 40px rgba(0,0,0,0.1);
                 text-align: center; max-width: 600px;
-            }
-            h1 { color: #333; margin-bottom: 20px; }
-            .status { background: #e8f5e8; color: #4caf50; padding: 15px; 
-                     border-radius: 10px; margin: 20px 0; }
-            .links { margin-top: 30px; }
-            .link { display: inline-block; margin: 10px; padding: 12px 24px;
+            }}
+            h1 {{ color: #333; margin-bottom: 20px; }}
+            .status {{ background: #e8f5e8; color: #4caf50; padding: 15px; 
+                     border-radius: 10px; margin: 20px 0; }}
+            .links {{ margin-top: 30px; }}
+            .link {{ display: inline-block; margin: 10px; padding: 12px 24px;
                    background: #667eea; color: white; text-decoration: none;
-                   border-radius: 8px; transition: all 0.3s; }
-            .link:hover { background: #5a6fd8; transform: translateY(-2px); }
-            .api-info { background: #f5f5f5; padding: 20px; border-radius: 10px;
-                       margin-top: 20px; text-align: left; }
+                   border-radius: 8px; transition: all 0.3s; }}
+            .link:hover {{ background: #5a6fd8; transform: translateY(-2px); }}
+            .api-info {{ background: #f5f5f5; padding: 20px; border-radius: 10px;
+                       margin-top: 20px; text-align: left; }}
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>🎓 Sistema de Gestão de Sugestões</h1>
+            <h1>🎓 {}</h1>
             <div class="status">
                 ✅ <strong>API Backend Funcionando</strong><br>
-                FastAPI + MySQL + JWT Authentication
+                FastAPI + Firebase + JWT Authentication
             </div>
             
-            <p>Backend API pronto para integração com interface personalizada do Figma!</p>
+            <p>Template file not found. Backend API ready for integration!</p>
             
             <div class="links">
-                <a href="/docs" class="link">📚 Documentação da API</a>
-                <a href="/redoc" class="link">📖 ReDoc</a>
-                <a href="/api/system/health" class="link">🔍 Health Check</a>
+                <a href="/" class="link">🏠 Home</a>
+                <a href="/dashboard" class="link">� Dashboard</a>
+                <a href="/docs" class="link">� API Docs</a>
             </div>
             
             <div class="api-info">
-                <h3>🔧 Informações da API</h3>
-                <p><strong>Base URL:</strong> <code>http://localhost:8000/api</code></p>
-                <p><strong>Login:</strong> <code>POST /api/auth/login</code></p>
-                <p><strong>Usuário Admin:</strong> admin@sistema.com / admin123</p>
-                <p><strong>Recursos:</strong> Users, Suggestions, Reports, System</p>
+                <h3>🔧 Available Pages</h3>
+                <p><strong>Dashboard:</strong> <code>/dashboard</code></p>
+                <p><strong>Sugestões:</strong> <code>/suggestions</code></p>
+                <p><strong>Usuários:</strong> <code>/users</code></p>
+                <p><strong>Relatórios:</strong> <code>/reports</code></p>
+                <p><strong>Sincronização:</strong> <code>/sync</code></p>
+                <p><strong>Configurações:</strong> <code>/settings</code></p>
             </div>
         </div>
     </body>
     </html>
-    """)
+    """.format(page_title, page_title)
 
 # Health check
 @app.get("/health")

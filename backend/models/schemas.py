@@ -166,6 +166,7 @@ class SystemHealth(BaseModel):
     database: str
     uptime: str
     message: str
+    google_forms_sync: Optional[str] = None
 
 class LogEntry(BaseModel):
     id: str  # Firebase usa strings como IDs

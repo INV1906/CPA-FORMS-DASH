@@ -66,6 +66,9 @@ class Settings:
     FIREBASE_AUTH_URI: str = os.getenv("FIREBASE_AUTH_URI", "https://accounts.google.com/o/oauth2/auth")
     FIREBASE_TOKEN_URI: str = os.getenv("FIREBASE_TOKEN_URI", "https://oauth2.googleapis.com/token")
     
+    # Firebase Service Account File (production alternative)
+    FIREBASE_SERVICE_ACCOUNT_FILE: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_FILE", "config/firebase-service-account.json")
+    
     # Email
     EMAIL_ENABLED: bool = False
     SMTP_HOST: Optional[str] = None

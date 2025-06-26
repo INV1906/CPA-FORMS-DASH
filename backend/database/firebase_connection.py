@@ -8,6 +8,7 @@ from typing import Dict, List, Optional, Any
 import os
 from datetime import datetime
 import json
+from pathlib import Path
 from backend.core.config import settings
 
 class MockFirestore:
@@ -20,7 +21,8 @@ class MockFirestore:
                     "id": "admin_user_123",
                     "nome": "Administrador",
                     "email": "admin@sistema.com",
-                    "senha_hash": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",  # admin123
+                    "senha_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",  # admin123
+                    "tipo_usuario": "admin",
                     "cargo": "admin",
                     "setor": "TI",
                     "ativo": True,
@@ -111,6 +113,14 @@ class FirebaseManager:
             return
         
         try:
+            # Check if Firebase is disabled
+            if not settings.FIREBASE_ENABLED:
+                print("🔥 Firebase DESABILITADO - usando modo DEMO")
+                self.db = MockFirestore()
+                self.is_demo_mode = True
+                self._initialized = True
+                return
+                
             # Check for demo/mock mode
             if (settings.FIREBASE_PRIVATE_KEY_ID == "dummy_key_id_for_testing" or 
                 "DUMMY" in settings.FIREBASE_PRIVATE_KEY):
@@ -123,17 +133,31 @@ class FirebaseManager:
             # Real Firebase initialization
             print("🔥 Inicializando Firebase real...")
             if not firebase_admin._apps:
-                # Try to load from service account key file
-                key_file = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'firebase-service-account.json')
+                # Try to load from service account key file first
+                key_file = Path(settings.FIREBASE_SERVICE_ACCOUNT_FILE)
                 
-                if os.path.exists(key_file):
+                if key_file.exists():
                     print("🔄 Usando arquivo de credenciais...")
-                    cred = credentials.Certificate(key_file)
-                    firebase_admin.initialize_app(cred, {
-                        'projectId': settings.FIREBASE_PROJECT_ID
-                    })
+                    try:
+                        cred = credentials.Certificate(str(key_file))
+                        firebase_admin.initialize_app(cred, {
+                            'projectId': settings.FIREBASE_PROJECT_ID
+                        })
+                        print("✅ Firebase inicializado com arquivo de credenciais")
+                    except Exception as e:
+                        print(f"❌ Erro ao carregar arquivo de credenciais: {e}")
+                        raise e
                 else:
                     print("🔄 Usando variáveis de ambiente...")
+                    # Validate required environment variables
+                    if not all([
+                        settings.FIREBASE_PRIVATE_KEY_ID,
+                        settings.FIREBASE_PRIVATE_KEY,
+                        settings.FIREBASE_CLIENT_EMAIL,
+                        settings.FIREBASE_CLIENT_ID
+                    ]):
+                        raise ValueError("Credenciais Firebase incompletas nas variáveis de ambiente")
+                    
                     # Initialize with environment variables
                     service_account_info = {
                         "type": "service_account",
@@ -150,6 +174,7 @@ class FirebaseManager:
                     
                     cred = credentials.Certificate(service_account_info)
                     firebase_admin.initialize_app(cred)
+                    print("✅ Firebase inicializado com variáveis de ambiente")
             
             # Get Firestore client
             print("🔄 Criando cliente Firestore...")

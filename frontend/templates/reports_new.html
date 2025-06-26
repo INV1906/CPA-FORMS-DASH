@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Sistema de Gestão de Sugestões</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    SG
+                </div>
+                <div class="sidebar-title">Sistema Gestão</div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <div class="nav-item">
+                        <a href="/dashboard" class="nav-link">
+                            <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/suggestions" class="nav-link">
+                            <i data-lucide="message-square" class="nav-icon"></i>
+                            <span class="nav-text">Sugestões</span>
+                            <span class="nav-badge">12</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/users" class="nav-link">
+                            <i data-lucide="users" class="nav-icon"></i>
+                            <span class="nav-text">Usuários</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytics</div>
+                    <div class="nav-item">
+                        <a href="/reports" class="nav-link active">
+                            <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                            <span class="nav-text">Relatórios</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/sync" class="nav-link">
+                            <i data-lucide="refresh-cw" class="nav-icon"></i>
+                            <span class="nav-text">Sincronização</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <div class="nav-item">
+                        <a href="/settings" class="nav-link">
+                            <i data-lucide="settings" class="nav-icon"></i>
+                            <span class="nav-text">Configurações</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1 class="page-title">Relatórios e Analytics</h1>
+                    <div class="breadcrumb">
+                        <span>Sistema</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Relatórios</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="btn btn-outline" id="exportAllBtn">
+                            <i data-lucide="download"></i>
+                            Exportar Todos
+                        </button>
+                        
+                        <button class="btn btn-primary" id="scheduleReportBtn">
+                            <i data-lucide="calendar"></i>
+                            Agendar Relatório
+                        </button>
+                        
+                        <button class="notification-btn" id="notificationBtn">
+                            <i data-lucide="bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        
+                        <button class="theme-toggle" id="themeToggle">
+                            <i data-lucide="moon"></i>
+                        </button>
+                        
+                        <div class="user-menu">
+                            <div class="user-avatar" id="userAvatar">
+                                AD
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="dashboard-content">
+                <!-- Report Filters -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h3 class="card-title">Filtros de Relatório</h3>
+                        <button class="btn btn-outline btn-sm" id="applyFiltersBtn">
+                            <i data-lucide="filter"></i>
+                            Aplicar Filtros
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid grid-cols-4 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Período</label>
+                                <select class="form-select" id="periodFilter">
+                                    <option value="week">Esta Semana</option>
+                                    <option value="month">Este Mês</option>
+                                    <option value="quarter" selected>Este Trimestre</option>
+                                    <option value="year">Este Ano</option>
+                                    <option value="custom">Personalizado</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Data Inicial</label>
+                                <input type="date" class="form-input" id="startDate">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Data Final</label>
+                                <input type="date" class="form-input" id="endDate">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-select" id="categoryFilter">
+                                    <option value="">Todas</option>
+                                    <option value="ensino">Ensino</option>
+                                    <option value="infraestrutura">Infraestrutura</option>
+                                    <option value="tecnologia">Tecnologia</option>
+                                    <option value="administrativo">Administrativo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="stats-grid">
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Sugestões Recebidas</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalReceived">89</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+23% vs período anterior</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Taxa de Implementação</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="implementationRate">78%</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+5% vs período anterior</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Tempo Médio de Resposta</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="avgResponseTime">4.2 dias</div>
+                        <div class="stat-change negative">
+                            <i data-lucide="arrow-down" class="stat-change-icon"></i>
+                            <span>-12% vs período anterior</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Satisfação Média</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="star"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="avgSatisfaction">4.5/5</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+0.3 vs período anterior</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Suggestions Trend Chart -->
+                    <div class="chart-card fade-in">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Tendência de Sugestões</h3>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn" data-period="30d">30D</button>
+                                <button class="chart-action-btn active" data-period="90d">90D</button>
+                                <button class="chart-action-btn" data-period="1y">1A</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="trendsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Category Distribution -->
+                    <div class="chart-card fade-in">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Distribuição por Categoria</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Status Timeline -->
+                    <div class="chart-card fade-in">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Evolução de Status</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="statusTimelineChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- User Engagement -->
+                    <div class="chart-card fade-in">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Engajamento dos Usuários</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="engagementChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Tables -->
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Top Contributors -->
+                    <div class="data-table fade-in">
+                        <div class="table-header">
+                            <h3 class="table-title">Principais Contribuidores</h3>
+                            <button class="btn btn-outline btn-sm" id="exportContributorsBtn">
+                                <i data-lucide="download"></i>
+                                Exportar
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Usuário</th>
+                                        <th>Sugestões</th>
+                                        <th>Implementadas</th>
+                                        <th>Taxa</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contributorsTable">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recent Implementations -->
+                    <div class="data-table fade-in">
+                        <div class="table-header">
+                            <h3 class="table-title">Implementações Recentes</h3>
+                            <button class="btn btn-outline btn-sm" id="exportImplementationsBtn">
+                                <i data-lucide="download"></i>
+                                Exportar
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Sugestão</th>
+                                        <th>Categoria</th>
+                                        <th>Implementado em</th>
+                                        <th>Impacto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="implementationsTable">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Reports -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h3 class="card-title">Relatórios Rápidos</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid grid-cols-3 gap-4">
+                            <button class="btn btn-outline quick-report-btn" data-report="monthly">
+                                <i data-lucide="calendar"></i>
+                                <div>
+                                    <strong>Relatório Mensal</strong>
+                                    <small>Resumo completo do mês</small>
+                                </div>
+                            </button>
+                            <button class="btn btn-outline quick-report-btn" data-report="performance">
+                                <i data-lucide="trending-up"></i>
+                                <div>
+                                    <strong>Performance</strong>
+                                    <small>Métricas de eficiência</small>
+                                </div>
+                            </button>
+                            <button class="btn btn-outline quick-report-btn" data-report="satisfaction">
+                                <i data-lucide="star"></i>
+                                <div>
+                                    <strong>Satisfação</strong>
+                                    <small>Feedback dos usuários</small>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Schedule Report Modal -->
+    <div class="modal" id="scheduleReportModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Agendar Relatório</h3>
+                <button class="modal-close" id="closeScheduleModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="scheduleForm">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Relatório</label>
+                        <select class="form-select" id="reportType" required>
+                            <option value="">Selecione...</option>
+                            <option value="monthly">Relatório Mensal</option>
+                            <option value="quarterly">Relatório Trimestral</option>
+                            <option value="performance">Relatório de Performance</option>
+                            <option value="satisfaction">Relatório de Satisfação</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Frequência</label>
+                            <select class="form-select" id="frequency" required>
+                                <option value="once">Uma vez</option>
+                                <option value="weekly">Semanal</option>
+                                <option value="monthly">Mensal</option>
+                                <option value="quarterly">Trimestral</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Formato</label>
+                            <select class="form-select" id="format" required>
+                                <option value="pdf">PDF</option>
+                                <option value="excel">Excel</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">E-mails para Envio</label>
+                        <textarea class="form-textarea" id="recipients" rows="3" 
+                                  placeholder="email1@domain.com, email2@domain.com"></textarea>
+                        <small class="form-help">Separe múltiplos e-mails com vírgula</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="includeCharts">
+                            Incluir gráficos no relatório
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelSchedule">Cancelar</button>
+                <button class="btn btn-primary" id="saveSchedule">
+                    <i data-lucide="calendar"></i>
+                    Agendar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/static/js/reports.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Initialize reports page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof ReportsManager !== 'undefined') {
+                window.reportsManager = new ReportsManager();
+            }
+        });
+    </script>
+</body>
+</html>

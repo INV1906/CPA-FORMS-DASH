@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Sugestões - Sistema de Gestão de Sugestões</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    SG
+                </div>
+                <div class="sidebar-title">Sistema Gestão</div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <div class="nav-item">
+                        <a href="/dashboard" class="nav-link">
+                            <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/suggestions" class="nav-link active">
+                            <i data-lucide="message-square" class="nav-icon"></i>
+                            <span class="nav-text">Sugestões</span>
+                            <span class="nav-badge">12</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/users" class="nav-link">
+                            <i data-lucide="users" class="nav-icon"></i>
+                            <span class="nav-text">Usuários</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytics</div>
+                    <div class="nav-item">
+                        <a href="/reports" class="nav-link">
+                            <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                            <span class="nav-text">Relatórios</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/sync" class="nav-link">
+                            <i data-lucide="refresh-cw" class="nav-icon"></i>
+                            <span class="nav-text">Sincronização</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <div class="nav-item">
+                        <a href="/settings" class="nav-link">
+                            <i data-lucide="settings" class="nav-icon"></i>
+                            <span class="nav-text">Configurações</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1 class="page-title">Gestão de Sugestões</h1>
+                    <div class="breadcrumb">
+                        <span>Sistema</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Sugestões</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="search-box">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Buscar sugestões..." id="searchInput">
+                    </div>
+                    
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="newSuggestionBtn">
+                            <i data-lucide="plus"></i>
+                            Nova Sugestão
+                        </button>
+                        
+                        <button class="notification-btn" id="notificationBtn">
+                            <i data-lucide="bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        
+                        <button class="theme-toggle" id="themeToggle">
+                            <i data-lucide="moon"></i>
+                        </button>
+                        
+                        <div class="user-menu">
+                            <div class="user-avatar" id="userAvatar">
+                                AD
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="dashboard-content">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Total de Sugestões</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="message-square"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalSuggestions">127</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+8 esta semana</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Pendentes</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="pendingSuggestions">23</div>
+                        <div class="stat-change negative">
+                            <i data-lucide="arrow-down" class="stat-change-icon"></i>
+                            <span>-3 vs semana anterior</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Implementadas</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="implementedSuggestions">89</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+12 este mês</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Taxa de Aprovação</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="approvalRate">78%</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+5% vs mês anterior</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h3 class="card-title">Filtros</h3>
+                        <button class="btn btn-outline btn-sm" id="clearFiltersBtn">
+                            <i data-lucide="x"></i>
+                            Limpar Filtros
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid grid-cols-4 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="statusFilter">
+                                    <option value="">Todos</option>
+                                    <option value="pending">Pendente</option>
+                                    <option value="in-progress">Em Análise</option>
+                                    <option value="approved">Aprovada</option>
+                                    <option value="implemented">Implementada</option>
+                                    <option value="rejected">Rejeitada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-select" id="categoryFilter">
+                                    <option value="">Todas</option>
+                                    <option value="ensino">Ensino</option>
+                                    <option value="infraestrutura">Infraestrutura</option>
+                                    <option value="tecnologia">Tecnologia</option>
+                                    <option value="administrativo">Administrativo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Prioridade</label>
+                                <select class="form-select" id="priorityFilter">
+                                    <option value="">Todas</option>
+                                    <option value="high">Alta</option>
+                                    <option value="medium">Média</option>
+                                    <option value="low">Baixa</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Período</label>
+                                <select class="form-select" id="periodFilter">
+                                    <option value="">Todos</option>
+                                    <option value="today">Hoje</option>
+                                    <option value="week">Esta Semana</option>
+                                    <option value="month">Este Mês</option>
+                                    <option value="quarter">Este Trimestre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestions Table -->
+                <div class="data-table fade-in">
+                    <div class="table-header">
+                        <h3 class="table-title">Lista de Sugestões</h3>
+                        <div class="table-actions">
+                            <button class="btn btn-outline btn-sm" id="exportBtn">
+                                <i data-lucide="download"></i>
+                                Exportar
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="filterToggleBtn">
+                                <i data-lucide="filter"></i>
+                                Filtros Avançados
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
+                                    <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Autor</th>
+                                    <th>Categoria</th>
+                                    <th>Status</th>
+                                    <th>Prioridade</th>
+                                    <th>Data</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="suggestionsTable">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="table-footer">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-700">
+                                Mostrando <span id="showingStart">1</span> a <span id="showingEnd">10</span> de <span id="totalCount">127</span> sugestões
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button class="btn btn-outline btn-sm" id="prevPageBtn" disabled>
+                                    <i data-lucide="chevron-left"></i>
+                                    Anterior
+                                </button>
+                                <div class="flex items-center gap-1" id="paginationNumbers">
+                                    <!-- Dynamic pagination numbers -->
+                                </div>
+                                <button class="btn btn-outline btn-sm" id="nextPageBtn">
+                                    Próximo
+                                    <i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- New Suggestion Modal -->
+    <div class="modal" id="newSuggestionModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nova Sugestão</h3>
+                <button class="modal-close" id="closeNewSuggestionModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="newSuggestionForm">
+                    <div class="form-group">
+                        <label class="form-label">Título *</label>
+                        <input type="text" class="form-input" id="suggestionTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Descrição *</label>
+                        <textarea class="form-textarea" id="suggestionDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Categoria *</label>
+                            <select class="form-select" id="suggestionCategory" required>
+                                <option value="">Selecione...</option>
+                                <option value="ensino">Ensino</option>
+                                <option value="infraestrutura">Infraestrutura</option>
+                                <option value="tecnologia">Tecnologia</option>
+                                <option value="administrativo">Administrativo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Prioridade</label>
+                            <select class="form-select" id="suggestionPriority">
+                                <option value="medium">Média</option>
+                                <option value="low">Baixa</option>
+                                <option value="high">Alta</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Anexos</label>
+                        <input type="file" class="form-input" id="suggestionAttachments" multiple>
+                        <small class="form-help">Formatos aceitos: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (Máx: 5MB cada)</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelNewSuggestion">Cancelar</button>
+                <button class="btn btn-primary" id="saveNewSuggestion">
+                    <i data-lucide="save"></i>
+                    Salvar Sugestão
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Suggestion Modal -->
+    <div class="modal" id="viewSuggestionModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title" id="viewSuggestionTitle">Detalhes da Sugestão</h3>
+                <button class="modal-close" id="closeViewSuggestionModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="viewSuggestionContent">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="editSuggestionBtn">
+                    <i data-lucide="edit"></i>
+                    Editar
+                </button>
+                <button class="btn btn-outline" id="closeSuggestionViewBtn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/static/js/suggestions.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Initialize suggestions page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof SuggestionsManager !== 'undefined') {
+                window.suggestionsManager = new SuggestionsManager();
+            }
+        });
+    </script>
+</body>
+</html>

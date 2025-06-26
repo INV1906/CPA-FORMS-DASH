@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sincronização - Sistema de Gestão de Sugestões</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    SG
+                </div>
+                <div class="sidebar-title">Sistema Gestão</div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <div class="nav-item">
+                        <a href="/dashboard" class="nav-link">
+                            <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/suggestions" class="nav-link">
+                            <i data-lucide="message-square" class="nav-icon"></i>
+                            <span class="nav-text">Sugestões</span>
+                            <span class="nav-badge">12</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/users" class="nav-link">
+                            <i data-lucide="users" class="nav-icon"></i>
+                            <span class="nav-text">Usuários</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytics</div>
+                    <div class="nav-item">
+                        <a href="/reports" class="nav-link">
+                            <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                            <span class="nav-text">Relatórios</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/sync" class="nav-link active">
+                            <i data-lucide="refresh-cw" class="nav-icon"></i>
+                            <span class="nav-text">Sincronização</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <div class="nav-item">
+                        <a href="/settings" class="nav-link">
+                            <i data-lucide="settings" class="nav-icon"></i>
+                            <span class="nav-text">Configurações</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1 class="page-title">Sincronização</h1>
+                    <div class="breadcrumb">
+                        <span>Sistema</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Sincronização</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="btn btn-outline" id="viewLogsBtn">
+                            <i data-lucide="file-text"></i>
+                            Ver Logs
+                        </button>
+                        
+                        <button class="btn btn-primary" id="manualSyncBtn">
+                            <i data-lucide="refresh-cw"></i>
+                            Sincronização Manual
+                        </button>
+                        
+                        <button class="notification-btn" id="notificationBtn">
+                            <i data-lucide="bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        
+                        <button class="theme-toggle" id="themeToggle">
+                            <i data-lucide="moon"></i>
+                        </button>
+                        
+                        <div class="user-menu">
+                            <div class="user-avatar" id="userAvatar">
+                                AD
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="dashboard-content">
+                <!-- Sync Status Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Status da Sincronização</h3>
+                            <div class="stat-icon sync-status-icon" id="syncStatusIcon">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="syncStatus">Ativo</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="clock" class="stat-change-icon"></i>
+                            <span>Última: há 2 min</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Registros Processados</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="database"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="processedRecords">1,847</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+23 hoje</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Novos Registros</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="plus-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="newRecords">15</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>Nas últimas 24h</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Taxa de Sucesso</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="target"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="successRate">99.2%</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+0.3% esta semana</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Controls -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h3 class="card-title">Controles de Sincronização</h3>
+                        <div class="sync-indicator" id="syncIndicator">
+                            <div class="sync-dot"></div>
+                            <span>Em execução</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid grid-cols-2 gap-6">
+                            <!-- Google Forms Integration -->
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-icon">
+                                        <i data-lucide="file-text"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Google Forms</h4>
+                                        <p>Sincronização de respostas do formulário</p>
+                                    </div>
+                                    <div class="integration-status status-success" id="googleFormsStatus">
+                                        Ativo
+                                    </div>
+                                </div>
+                                <div class="integration-controls">
+                                    <button class="btn btn-outline btn-sm" id="pauseGoogleFormsBtn">
+                                        <i data-lucide="pause"></i>
+                                        Pausar
+                                    </button>
+                                    <button class="btn btn-primary btn-sm" id="syncGoogleFormsBtn">
+                                        <i data-lucide="refresh-cw"></i>
+                                        Sincronizar Agora
+                                    </button>
+                                </div>
+                                <div class="integration-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Último sync:</span>
+                                        <span class="stat-value" id="lastGoogleFormsSync">há 2 min</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Próximo sync:</span>
+                                        <span class="stat-value" id="nextGoogleFormsSync">em 28 min</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Intervalo:</span>
+                                        <span class="stat-value">30 minutos</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Database Backup -->
+                            <div class="integration-card">
+                                <div class="integration-header">
+                                    <div class="integration-icon">
+                                        <i data-lucide="hard-drive"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Backup do Banco</h4>
+                                        <p>Backup automático dos dados</p>
+                                    </div>
+                                    <div class="integration-status status-success" id="backupStatus">
+                                        Ativo
+                                    </div>
+                                </div>
+                                <div class="integration-controls">
+                                    <button class="btn btn-outline btn-sm" id="pauseBackupBtn">
+                                        <i data-lucide="pause"></i>
+                                        Pausar
+                                    </button>
+                                    <button class="btn btn-primary btn-sm" id="runBackupBtn">
+                                        <i data-lucide="save"></i>
+                                        Backup Agora
+                                    </button>
+                                </div>
+                                <div class="integration-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Último backup:</span>
+                                        <span class="stat-value" id="lastBackup">há 6 horas</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Próximo backup:</span>
+                                        <span class="stat-value" id="nextBackup">em 18 horas</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Tamanho:</span>
+                                        <span class="stat-value">2.4 MB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Progress -->
+                <div class="card fade-in" id="syncProgressCard" style="display: none;">
+                    <div class="card-header">
+                        <h3 class="card-title">Progresso da Sincronização</h3>
+                        <button class="btn btn-outline btn-sm" id="cancelSyncBtn">
+                            <i data-lucide="x"></i>
+                            Cancelar
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="sync-progress">
+                            <div class="progress-info">
+                                <span id="progressText">Iniciando sincronização...</span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-details">
+                                <div class="detail-item">
+                                    <span>Processados:</span>
+                                    <span id="processedCount">0</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Total:</span>
+                                    <span id="totalCount">0</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Tempo estimado:</span>
+                                    <span id="estimatedTime">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync History -->
+                <div class="data-table fade-in">
+                    <div class="table-header">
+                        <h3 class="table-title">Histórico de Sincronizações</h3>
+                        <div class="table-actions">
+                            <button class="btn btn-outline btn-sm" id="clearHistoryBtn">
+                                <i data-lucide="trash-2"></i>
+                                Limpar Histórico
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="exportHistoryBtn">
+                                <i data-lucide="download"></i>
+                                Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Tipo</th>
+                                    <th>Status</th>
+                                    <th>Registros</th>
+                                    <th>Duração</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="syncHistoryTable">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- System Logs -->
+                <div class="data-table fade-in">
+                    <div class="table-header">
+                        <h3 class="table-title">Logs do Sistema</h3>
+                        <div class="table-actions">
+                            <select class="form-select form-select-sm" id="logLevelFilter">
+                                <option value="">Todos os níveis</option>
+                                <option value="info">Info</option>
+                                <option value="warning">Warning</option>
+                                <option value="error">Error</option>
+                            </select>
+                            <button class="btn btn-outline btn-sm" id="refreshLogsBtn">
+                                <i data-lucide="refresh-cw"></i>
+                                Atualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Nível</th>
+                                    <th>Componente</th>
+                                    <th>Mensagem</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="systemLogsTable">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Log Details Modal -->
+    <div class="modal" id="logDetailsModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalhes do Log</h3>
+                <button class="modal-close" id="closeLogDetailsModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="logDetailsContent">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeLogDetailsBtn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/static/js/sync.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Initialize sync page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof SyncManager !== 'undefined') {
+                window.syncManager = new SyncManager();
+            }
+        });
+    </script>
+
+    <style>
+        /* Additional styles for sync page */
+        .sync-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .integration-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            background: var(--bg-secondary);
+        }
+
+        .integration-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .integration-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .integration-header > div:nth-child(2) {
+            flex: 1;
+        }
+
+        .integration-header h4 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .integration-header p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .integration-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .integration-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .integration-stats {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        .stat-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .sync-progress {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-details {
+            display: flex;
+            gap: var(--spacing-lg);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            font-size: 0.875rem;
+        }
+
+        .detail-item span:first-child {
+            color: var(--text-muted);
+        }
+
+        .detail-item span:last-child {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .sync-status-icon.status-active {
+            color: var(--success-color);
+        }
+
+        .sync-status-icon.status-paused {
+            color: var(--warning-color);
+        }
+
+        .sync-status-icon.status-error {
+            color: var(--error-color);
+        }
+    </style>
+</body>
+</html>

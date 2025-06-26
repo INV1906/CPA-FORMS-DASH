@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Usuários - Sistema de Gestão de Sugestões</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    SG
+                </div>
+                <div class="sidebar-title">Sistema Gestão</div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <div class="nav-item">
+                        <a href="/dashboard" class="nav-link">
+                            <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/suggestions" class="nav-link">
+                            <i data-lucide="message-square" class="nav-icon"></i>
+                            <span class="nav-text">Sugestões</span>
+                            <span class="nav-badge">12</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/users" class="nav-link active">
+                            <i data-lucide="users" class="nav-icon"></i>
+                            <span class="nav-text">Usuários</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytics</div>
+                    <div class="nav-item">
+                        <a href="/reports" class="nav-link">
+                            <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                            <span class="nav-text">Relatórios</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/sync" class="nav-link">
+                            <i data-lucide="refresh-cw" class="nav-icon"></i>
+                            <span class="nav-text">Sincronização</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <div class="nav-item">
+                        <a href="/settings" class="nav-link">
+                            <i data-lucide="settings" class="nav-icon"></i>
+                            <span class="nav-text">Configurações</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1 class="page-title">Gestão de Usuários</h1>
+                    <div class="breadcrumb">
+                        <span>Sistema</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Usuários</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="search-box">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Buscar usuários..." id="searchInput">
+                    </div>
+                    
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="newUserBtn">
+                            <i data-lucide="user-plus"></i>
+                            Novo Usuário
+                        </button>
+                        
+                        <button class="notification-btn" id="notificationBtn">
+                            <i data-lucide="bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        
+                        <button class="theme-toggle" id="themeToggle">
+                            <i data-lucide="moon"></i>
+                        </button>
+                        
+                        <div class="user-menu">
+                            <div class="user-avatar" id="userAvatar">
+                                AD
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="dashboard-content">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Total de Usuários</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalUsers">342</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>+15 este mês</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Usuários Ativos</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="user-check"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="activeUsers">298</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>87% do total</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Novos Usuários</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="user-plus"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="newUsers">28</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            <span>Esta semana</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card fade-in">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Administradores</h3>
+                            <div class="stat-icon">
+                                <i data-lucide="shield"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="adminUsers">8</div>
+                        <div class="stat-change neutral">
+                            <i data-lucide="minus" class="stat-change-icon"></i>
+                            <span>Sem alterações</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h3 class="card-title">Filtros</h3>
+                        <button class="btn btn-outline btn-sm" id="clearFiltersBtn">
+                            <i data-lucide="x"></i>
+                            Limpar Filtros
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid grid-cols-4 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="statusFilter">
+                                    <option value="">Todos</option>
+                                    <option value="active">Ativo</option>
+                                    <option value="inactive">Inativo</option>
+                                    <option value="pending">Pendente</option>
+                                    <option value="suspended">Suspenso</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Perfil</label>
+                                <select class="form-select" id="roleFilter">
+                                    <option value="">Todos</option>
+                                    <option value="admin">Administrador</option>
+                                    <option value="moderator">Moderador</option>
+                                    <option value="user">Usuário</option>
+                                    <option value="guest">Visitante</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Departamento</label>
+                                <select class="form-select" id="departmentFilter">
+                                    <option value="">Todos</option>
+                                    <option value="ti">TI</option>
+                                    <option value="academico">Acadêmico</option>
+                                    <option value="administrativo">Administrativo</option>
+                                    <option value="biblioteca">Biblioteca</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Data de Cadastro</label>
+                                <select class="form-select" id="periodFilter">
+                                    <option value="">Todos</option>
+                                    <option value="today">Hoje</option>
+                                    <option value="week">Esta Semana</option>
+                                    <option value="month">Este Mês</option>
+                                    <option value="quarter">Este Trimestre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="data-table fade-in">
+                    <div class="table-header">
+                        <h3 class="table-title">Lista de Usuários</h3>
+                        <div class="table-actions">
+                            <button class="btn btn-outline btn-sm" id="exportBtn">
+                                <i data-lucide="download"></i>
+                                Exportar
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="bulkActionsBtn">
+                                <i data-lucide="more-horizontal"></i>
+                                Ações em Lote
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
+                                    <th>Avatar</th>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Perfil</th>
+                                    <th>Departamento</th>
+                                    <th>Status</th>
+                                    <th>Último Acesso</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="table-footer">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-700">
+                                Mostrando <span id="showingStart">1</span> a <span id="showingEnd">10</span> de <span id="totalCount">342</span> usuários
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button class="btn btn-outline btn-sm" id="prevPageBtn" disabled>
+                                    <i data-lucide="chevron-left"></i>
+                                    Anterior
+                                </button>
+                                <div class="flex items-center gap-1" id="paginationNumbers">
+                                    <!-- Dynamic pagination numbers -->
+                                </div>
+                                <button class="btn btn-outline btn-sm" id="nextPageBtn">
+                                    Próximo
+                                    <i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- New User Modal -->
+    <div class="modal" id="newUserModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Novo Usuário</h3>
+                <button class="modal-close" id="closeNewUserModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="newUserForm">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Nome *</label>
+                            <input type="text" class="form-input" id="userName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">E-mail *</label>
+                            <input type="email" class="form-input" id="userEmail" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Perfil *</label>
+                            <select class="form-select" id="userRole" required>
+                                <option value="">Selecione...</option>
+                                <option value="user">Usuário</option>
+                                <option value="moderator">Moderador</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Departamento</label>
+                            <select class="form-select" id="userDepartment">
+                                <option value="">Selecione...</option>
+                                <option value="ti">TI</option>
+                                <option value="academico">Acadêmico</option>
+                                <option value="administrativo">Administrativo</option>
+                                <option value="biblioteca">Biblioteca</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha Temporária *</label>
+                        <input type="password" class="form-input" id="userPassword" required>
+                        <small class="form-help">O usuário será solicitado a alterar a senha no primeiro acesso</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="sendWelcomeEmail">
+                            Enviar e-mail de boas-vindas
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelNewUser">Cancelar</button>
+                <button class="btn btn-primary" id="saveNewUser">
+                    <i data-lucide="save"></i>
+                    Criar Usuário
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View User Modal -->
+    <div class="modal" id="viewUserModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title" id="viewUserTitle">Detalhes do Usuário</h3>
+                <button class="modal-close" id="closeViewUserModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="viewUserContent">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="editUserBtn">
+                    <i data-lucide="edit"></i>
+                    Editar
+                </button>
+                <button class="btn btn-outline" id="closeUserViewBtn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/static/js/users.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Initialize users page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof UsersManager !== 'undefined') {
+                window.usersManager = new UsersManager();
+            }
+        });
+    </script>
+</body>
+</html>

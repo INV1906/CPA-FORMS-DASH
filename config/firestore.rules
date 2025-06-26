@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regras para usuários - apenas usuários autenticados
+    match /usuarios/{userId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Regras para sugestões - apenas usuários autenticados
+    match /sugestoes/{suggestionId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Regras para configurações - apenas admins
+    match /configuracoes/{configId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.cargo == 'admin';
+    }
+    
+    // Regras para logs - apenas leitura para usuários autenticados
+    match /logs/{logId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para relatórios - apenas usuários autenticados
+    match /relatorios/{reportId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Regras para setores - leitura para todos autenticados
+    match /setores/{sectorId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.cargo == 'admin';
+    }
+    
+    // Regras para sincronização - apenas sistema
+    match /sync/{syncId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Negar acesso a tudo mais
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

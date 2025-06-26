@@ -164,7 +164,6 @@ class GoogleFormsSync:
         """Mapear dados do formulário para estrutura de sugestão"""
         raw = form_data['raw_data']
         
-        # Mapeamento flexível de campos (adapte conforme seu formulário)
         suggestion = {
             'timestamp': form_data['timestamp'],
             'created_at': form_data['timestamp'],
@@ -174,47 +173,59 @@ class GoogleFormsSync:
             'source': 'google_forms'
         }
         
-        # Mapear campos comuns (adapte para seus nomes de campo)
-        field_mapping = {
-            # Campo do Forms -> Campo no Firebase
-            'Nome': 'nome',
-            'Name': 'nome',
-            'E-mail': 'email',
-            'Email': 'email',
-            'Telefone': 'telefone',
-            'Phone': 'telefone',
-            'Título': 'titulo',
-            'Title': 'titulo',
-            'Assunto': 'titulo',
-            'Subject': 'titulo',
-            'Descrição': 'descricao',
-            'Description': 'descricao',
-            'Sugestão': 'descricao',
-            'Suggestion': 'descricao',
-            'Comentário': 'descricao',
-            'Comment': 'descricao',
-            'Setor': 'setor_origem',
-            'Department': 'setor_origem',
-            'Tipo': 'tipo_sugestao',
-            'Type': 'tipo_sugestao',
-            'Categoria': 'categoria',
-            'Category': 'categoria'
+        # Mapeamento específico para seus campos do Google Forms
+        # Extrair dados principais
+        vinculo = raw.get('Vínculo Institucional', '').strip()
+        instituicao = raw.get('A qual instituição de ensino está vinculado?', '').strip()
+        categoria_curso = raw.get('Qual categoria de curso está vinculado?', '').strip()
+        descricao_sugestao = raw.get('Informe aqui sua sugestão:', '').strip()
+        
+        # Mapear vínculo institucional para tipo de usuário
+        if vinculo == 'Aluno':
+            suggestion['nome'] = 'Aluno'
+            suggestion['tipo_usuario'] = 'aluno'
+        elif vinculo == 'Colaborador':
+            suggestion['nome'] = 'Colaborador'
+            suggestion['tipo_usuario'] = 'colaborador'
+        else:
+            suggestion['nome'] = vinculo if vinculo else 'Usuário Anônimo'
+            suggestion['tipo_usuario'] = 'externo'
+        
+        # Mapear instituição para setor de origem
+        if instituicao == 'Biopark Educação':
+            suggestion['setor_origem'] = 'Biopark Educação'
+            suggestion['instituicao'] = 'biopark'
+        elif instituicao == 'Uniamérica':
+            suggestion['setor_origem'] = 'Uniamérica'
+            suggestion['instituicao'] = 'uniamerica'
+        else:
+            suggestion['setor_origem'] = instituicao if instituicao else 'Outra Instituição'
+            suggestion['instituicao'] = 'outra'
+        
+        # Mapear categoria do curso
+        if categoria_curso in ['Pós-Graduação', 'Graduação', 'Técnico']:
+            suggestion['categoria_curso'] = categoria_curso.lower().replace('-', '_')
+            suggestion['categoria'] = categoria_curso
+        else:
+            suggestion['categoria_curso'] = 'outro'
+            suggestion['categoria'] = categoria_curso if categoria_curso else 'Outro'
+        
+        # Dados principais da sugestão
+        suggestion['titulo'] = f"Sugestão - {vinculo} {categoria_curso}".strip()
+        suggestion['descricao'] = descricao_sugestao if descricao_sugestao else 'Sem descrição'
+        
+        # Campos adicionais
+        suggestion['email'] = f"{vinculo.lower()}@{suggestion['instituicao']}.edu"
+        suggestion['setor_destino'] = 'Gestão Acadêmica'
+        suggestion['tipo_sugestao'] = 'Sugestão de Melhoria'
+        
+        # Dados estruturados para consultas otimizadas
+        suggestion['dados_estruturados'] = {
+            'vinculo_institucional': vinculo,
+            'instituicao_ensino': instituicao,
+            'categoria_curso': categoria_curso,
+            'sugestao_completa': descricao_sugestao
         }
-        
-        # Aplicar mapeamento
-        for form_field, db_field in field_mapping.items():
-            if form_field in raw and raw[form_field]:
-                suggestion[db_field] = raw[form_field]
-        
-        # Campos padrão se não fornecidos
-        suggestion.setdefault('nome', 'Usuário Anônimo')
-        suggestion.setdefault('email', 'anonimo@forms.com')
-        suggestion.setdefault('titulo', 'Sugestão via Forms')
-        suggestion.setdefault('descricao', raw.get('Resposta', raw.get('Response', 'Sem descrição')))
-        suggestion.setdefault('setor_origem', 'Externo')
-        suggestion.setdefault('setor_destino', 'Geral')
-        suggestion.setdefault('tipo_sugestao', 'Sugestão')
-        suggestion.setdefault('categoria', 'Geral')
         
         return suggestion
     

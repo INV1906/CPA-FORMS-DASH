@@ -9,6 +9,7 @@ from backend.models.schemas import SystemHealth, LogList, LogEntry, BaseResponse
 from backend.api.auth import get_current_user, get_admin_user
 from backend.services.auth_service import auth_service
 from backend.database.firebase_connection import firebase_manager
+from backend.core.config import settings
 from collections import defaultdict
 
 router = APIRouter()
@@ -16,7 +17,7 @@ router = APIRouter()
 @router.get("/health", response_model=SystemHealth)
 async def health_check():
     """
-    System health check - Firebase implementation
+    System health check - Firebase implementation with Google Forms sync status
     """
     try:
         # Test Firebase connection
@@ -24,6 +25,22 @@ async def health_check():
         
         # Calculate uptime (simplified)
         uptime = "Running"
+        
+        # Check Google Forms sync status
+        google_forms_status = "disabled"
+        try:
+            if settings.GOOGLE_SHEETS_ENABLED and settings.AUTO_SYNC_ENABLED:
+                from backend.services.google_forms_sync import google_forms_sync
+                if google_forms_sync.sheets_service and settings.GOOGLE_SHEETS_ID:
+                    google_forms_status = "active"
+                else:
+                    google_forms_status = "configured_but_error"
+            elif settings.GOOGLE_SHEETS_ENABLED:
+                google_forms_status = "enabled_but_manual"
+            else:
+                google_forms_status = "disabled"
+        except Exception as e:
+            google_forms_status = "error"
         
         # Additional Firebase status info
         status_message = "Sistema de Gestão de Sugestões API"
@@ -37,7 +54,8 @@ async def health_check():
             version="2.0.0",
             database=f"Firebase Firestore ({('Demo' if firebase_manager.is_demo_mode else 'Connected')})",
             uptime=uptime,
-            message=status_message
+            message=status_message,
+            google_forms_sync=google_forms_status
         )
         
     except Exception as e:
@@ -46,7 +64,8 @@ async def health_check():
             version="2.0.0",
             database="error",
             uptime="Unknown",
-            message=f"System error: {str(e)}"
+            message=f"System error: {str(e)}",
+            google_forms_sync="error"
         )
 
 @router.get("/logs", response_model=LogList)

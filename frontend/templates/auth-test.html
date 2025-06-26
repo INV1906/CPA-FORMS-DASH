@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Autenticação - Sistema de Gestão de Sugestões</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Teste de Autenticação</h1>
+        <p>Esta página testa o fluxo de autenticação para identificar problemas de redirecionamento infinito.</p>
+
+        <div class="test-section">
+            <h3>📊 Status Atual</h3>
+            <div id="currentStatus"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Testes Manuais</h3>
+            <button class="btn btn-primary" onclick="testLogin()">Ir para Login</button>
+            <button class="btn btn-primary" onclick="testDashboard()">Ir para Dashboard</button>
+            <button class="btn btn-danger" onclick="clearAuth()">Limpar Auth</button>
+            <button class="btn btn-success" onclick="mockLogin()">Simular Login</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 Log de Atividades</h3>
+            <div id="activityLog"></div>
+            <button class="btn btn-primary" onclick="clearLog()">Limpar Log</button>
+        </div>
+
+        <div class="test-section">
+            <h3>💾 LocalStorage</h3>
+            <div id="localStorageContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let activityLog = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            activityLog.push({ timestamp, message, type });
+            updateActivityLog();
+            console.log(`[${timestamp}] ${message}`);
+        }
+
+        function updateStatus() {
+            const statusDiv = document.getElementById('currentStatus');
+            const token = localStorage.getItem('access_token') || localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            const currentUrl = window.location.href;
+
+            let html = `
+                <div class="status ${token ? 'pass' : 'fail'}">
+                    Token: ${token ? 'PRESENTE' : 'AUSENTE'}
+                </div>
+                <div class="status ${user ? 'pass' : 'fail'}">
+                    Usuário: ${user ? 'PRESENTE' : 'AUSENTE'}
+                </div>
+                <div class="status pass">
+                    URL Atual: ${currentUrl}
+                </div>
+            `;
+
+            if (token) {
+                html += `<div class="status warning">Token: ${token.substring(0, 20)}...</div>`;
+            }
+
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    html += `<div class="status pass">Email: ${userData.email || 'N/A'}</div>`;
+                } catch (e) {
+                    html += `<div class="status fail">Erro ao ler dados do usuário</div>`;
+                }
+            }
+
+            statusDiv.innerHTML = html;
+        }
+
+        function updateActivityLog() {
+            const logDiv = document.getElementById('activityLog');
+            if (activityLog.length === 0) {
+                logDiv.innerHTML = '<p>Nenhuma atividade registrada.</p>';
+                return;
+            }
+
+            const html = activityLog.slice(-10).map(entry => 
+                `<div class="status ${entry.type}">[${entry.timestamp}] ${entry.message}</div>`
+            ).join('');
+
+            logDiv.innerHTML = html;
+        }
+
+        function updateLocalStorage() {
+            const lsDiv = document.getElementById('localStorageContent');
+            const relevantKeys = ['access_token', 'authToken', 'user', 'refresh_token'];
+            
+            const data = {};
+            relevantKeys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) {
+                    data[key] = key.includes('token') ? `${value.substring(0, 20)}...` : value;
+                }
+            });
+
+            lsDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+
+        function testLogin() {
+            log('Redirecionando para página de login...', 'info');
+            window.location.href = '/login';
+        }
+
+        function testDashboard() {
+            log('Redirecionando para dashboard...', 'info');
+            window.location.href = '/dashboard';
+        }
+
+        function clearAuth() {
+            log('Limpando dados de autenticação...', 'warning');
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('refresh_token');
+            updateStatus();
+            updateLocalStorage();
+            log('Dados de autenticação limpos', 'success');
+        }
+
+        function mockLogin() {
+            log('Simulando login com token falso...', 'info');
+            const fakeToken = 'fake_jwt_token_for_testing_' + Date.now();
+            const fakeUser = {
+                email: 'test@example.com',
+                nome: 'Usuário Teste',
+                tipo_usuario: 'admin'
+            };
+            
+            localStorage.setItem('access_token', fakeToken);
+            localStorage.setItem('user', JSON.stringify(fakeUser));
+            
+            updateStatus();
+            updateLocalStorage();
+            log('Login simulado com sucesso', 'success');
+        }
+
+        function clearLog() {
+            activityLog = [];
+            updateActivityLog();
+        }
+
+        // Update everything on load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Página de teste carregada', 'info');
+            updateStatus();
+            updateActivityLog();
+            updateLocalStorage();
+            
+            // Check for infinite redirects
+            const referrer = document.referrer;
+            if (referrer && (referrer.includes('/login') || referrer.includes('/dashboard'))) {
+                log(`Possível redirecionamento de: ${referrer}`, 'warning');
+            }
+        });
+
+        // Monitor localStorage changes
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            if (['access_token', 'authToken', 'user', 'refresh_token'].includes(key)) {
+                log(`localStorage.setItem: ${key}`, 'info');
+                updateLocalStorage();
+            }
+            return originalSetItem.apply(this, arguments);
+        };
+
+        const originalRemoveItem = localStorage.removeItem;
+        localStorage.removeItem = function(key) {
+            if (['access_token', 'authToken', 'user', 'refresh_token'].includes(key)) {
+                log(`localStorage.removeItem: ${key}`, 'warning');
+                updateLocalStorage();
+            }
+            return originalRemoveItem.apply(this, arguments);
+        };
+    </script>
+</body>
+</html>

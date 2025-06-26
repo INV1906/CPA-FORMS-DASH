@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios e Analytics - Sistema de Gestão de Sugestões</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">SG</div>
+                <div class="sidebar-title">Sistema Gestão</div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <button class="sidebar-expand-btn" id="sidebarExpandBtn">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <div class="nav-item">
+                        <a href="/dashboard" class="nav-link">
+                            <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/suggestions" class="nav-link">
+                            <i data-lucide="message-square" class="nav-icon"></i>
+                            <span class="nav-text">Sugestões</span>
+                            <span class="nav-badge">12</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/users" class="nav-link">
+                            <i data-lucide="users" class="nav-icon"></i>
+                            <span class="nav-text">Usuários</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytics</div>
+                    <div class="nav-item">
+                        <a href="/reports" class="nav-link active">
+                            <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                            <span class="nav-text">Relatórios</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/sync" class="nav-link">
+                            <i data-lucide="refresh-cw" class="nav-icon"></i>
+                            <span class="nav-text">Sincronização</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <div class="nav-item">
+                        <a href="/settings" class="nav-link">
+                            <i data-lucide="settings" class="nav-icon"></i>
+                            <span class="nav-text">Configurações</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <h1 class="page-title">Relatórios e Analytics</h1>
+                    <div class="page-breadcrumb">
+                        <span>Sistema</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Relatórios</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="header-btn">
+                        <i data-lucide="download" class="header-btn-icon"></i>
+                        <span class="header-btn-text">Exportar Todos</span>
+                    </button>
+                    <button class="header-btn primary">
+                        <i data-lucide="calendar" class="header-btn-icon"></i>
+                        <span class="header-btn-text">Agendar Relatório</span>
+                    </button>
+                    
+                    <!-- Notificações -->
+                    <button class="notification-btn">
+                        <i data-lucide="bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <!-- Menu do usuário -->
+                    <div class="user-menu">
+                        <div class="user-info">
+                            <div class="user-name">Admin</div>
+                            <div class="user-role">Administrador</div>
+                        </div>
+                        <div class="user-avatar">AD</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Filtros de Relatório -->
+                <section class="filters-section">
+                    <div class="filters-header">
+                        <h2 class="filters-title">Filtros de Relatório</h2>
+                        <button class="apply-filters-btn">
+                            <i data-lucide="filter"></i>
+                            Aplicar Filtros
+                        </button>
+                    </div>
+                    
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Período</label>
+                            <select class="filter-select">
+                                <option>Este Trimestre</option>
+                                <option>Este Mês</option>
+                                <option>Esta Semana</option>
+                                <option>Personalizado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Data Inicial</label>
+                            <input type="date" class="filter-input" placeholder="dd/mm/aaaa">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Data Final</label>
+                            <input type="date" class="filter-input" placeholder="dd/mm/aaaa">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Categoria</label>
+                            <select class="filter-select">
+                                <option>Todas</option>
+                                <option>Melhorias</option>
+                                <option>Críticas</option>
+                                <option>Ideias</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cards de Estatísticas -->
+                <section class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Sugestões Recebidas</h3>
+                            <div class="stat-icon trending">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">89</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            +23% vs período anterior
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Taxa de Implementação</h3>
+                            <div class="stat-icon check">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">78%</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            +5% vs período anterior
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Tempo Médio de Resposta</h3>
+                            <div class="stat-icon clock">
+                                <i data-lucide="clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">4.2 dias</div>
+                        <div class="stat-change negative">
+                            <i data-lucide="arrow-down" class="stat-change-icon"></i>
+                            -12% vs período anterior
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3 class="stat-title">Satisfação Média</h3>
+                            <div class="stat-icon star">
+                                <i data-lucide="star"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">4.5/5</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="arrow-up" class="stat-change-icon"></i>
+                            +0.3 vs período anterior
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Gráficos -->
+                <section class="charts-grid">
+                    <!-- Tendência de Sugestões -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Tendência de Sugestões</h3>
+                            <div class="chart-tabs">
+                                <button class="chart-tab active">30D</button>
+                                <button class="chart-tab">90D</button>
+                                <button class="chart-tab">1A</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="trendsChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Distribuição por Categoria -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Distribuição por Categoria</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/reports.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trends Chart
+            const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Sugestões',
+                        data: [12, 19, 15, 25, 22, 30],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+            
+            // Category Chart
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Melhorias', 'Críticas', 'Ideias', 'Outros'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: ['#6366f1', '#8b5cf6', '#10b981', '#f59e0b']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

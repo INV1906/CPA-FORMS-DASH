@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Sistema de Gestão de Sugestões</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    SG
+                </div>
+                <div class="sidebar-title">Sistema Gestão</div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <!-- Botão de expansão -->
+                <button class="sidebar-expand-btn" id="sidebarExpandBtn">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <div class="nav-item">
+                        <a href="/dashboard" class="nav-link">
+                            <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/suggestions" class="nav-link">
+                            <i data-lucide="message-square" class="nav-icon"></i>
+                            <span class="nav-text">Sugestões</span>
+                            <span class="nav-badge">12</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/users" class="nav-link">
+                            <i data-lucide="users" class="nav-icon"></i>
+                            <span class="nav-text">Usuários</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytics</div>
+                    <div class="nav-item">
+                        <a href="/reports" class="nav-link">
+                            <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                            <span class="nav-text">Relatórios</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <div class="nav-item">
+                        <a href="/sync" class="nav-link">
+                            <i data-lucide="sync" class="nav-icon"></i>
+                            <span class="nav-text">Sincronização</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="/settings" class="nav-link active">
+                            <i data-lucide="settings" class="nav-icon"></i>
+                            <span class="nav-text">Configurações</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="sidebar-toggle mobile-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Configurações</h1>
+                </div>
+                
+                <div class="header-right">
+                    <button class="btn-icon notification-btn" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">2</span>
+                    </button>
+                    
+                    <div class="user-menu">
+                        <button class="user-dropdown-btn" id="userDropdownBtn">
+                            <img src="https://ui-avatars.com/api/?name=Admin&background=6c5ce7&color=fff" alt="Admin" class="user-avatar">
+                            <span class="user-name">Admin</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                Perfil
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Configurações
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Sair
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <div class="settings-container">
+                    <!-- Settings Navigation -->
+                    <div class="settings-nav">
+                        <button class="tab-btn active" data-tab="general">
+                            <i class="fas fa-cog"></i>
+                            Geral
+                        </button>
+                        <button class="tab-btn" data-tab="security">
+                            <i class="fas fa-shield-alt"></i>
+                            Segurança
+                        </button>
+                        <button class="tab-btn" data-tab="notifications">
+                            <i class="fas fa-bell"></i>
+                            Notificações
+                        </button>
+                        <button class="tab-btn" data-tab="system">
+                            <i class="fas fa-server"></i>
+                            Sistema
+                        </button>
+                        <button class="tab-btn" data-tab="backup">
+                            <i class="fas fa-database"></i>
+                            Backup
+                        </button>
+                    </div>
+
+                    <!-- Settings Content -->
+                    <div class="settings-content">
+                        <!-- General Settings -->
+                        <div class="tab-content active" id="general">
+                            <div class="settings-section">
+                                <h2>Configurações Gerais</h2>
+                                <p>Configure as informações básicas do sistema.</p>
+
+                                <form id="generalSettingsForm">
+                                    <div class="form-group">
+                                        <label for="siteName">Nome do Sistema</label>
+                                        <input type="text" id="siteName" name="siteName" class="form-control" placeholder="Digite o nome do sistema">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="siteDescription">Descrição</label>
+                                        <textarea id="siteDescription" name="siteDescription" class="form-control" rows="3" placeholder="Digite a descrição do sistema"></textarea>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="adminEmail">Email do Administrador</label>
+                                            <input type="email" id="adminEmail" name="adminEmail" class="form-control" placeholder="admin@empresa.com">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="languageSelector">Idioma</label>
+                                            <select id="languageSelector" name="language" class="form-control">
+                                                <option value="pt-BR">Português (Brasil)</option>
+                                                <option value="en-US">English (US)</option>
+                                                <option value="es-ES">Español</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="timezoneSelector">Fuso Horário</label>
+                                            <select id="timezoneSelector" name="timezone" class="form-control">
+                                                <option value="America/Sao_Paulo">América/São Paulo</option>
+                                                <option value="America/New_York">América/Nova York</option>
+                                                <option value="Europe/London">Europa/Londres</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="darkModeToggle" name="darkMode">
+                                                <label for="darkModeToggle">Modo Escuro</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i>
+                                            Salvar Configurações
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Security Settings -->
+                        <div class="tab-content" id="security">
+                            <div class="settings-section">
+                                <h2>Configurações de Segurança</h2>
+                                <p>Configure as políticas de segurança do sistema.</p>
+
+                                <form id="securitySettingsForm">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="sessionTimeout">Timeout de Sessão (minutos)</label>
+                                            <input type="number" id="sessionTimeout" name="sessionTimeout" class="form-control" min="5" max="1440" value="30">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="maxLoginAttempts">Máximo de Tentativas de Login</label>
+                                            <input type="number" id="maxLoginAttempts" name="maxLoginAttempts" class="form-control" min="3" max="10" value="5">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="passwordMinLength">Tamanho Mínimo da Senha</label>
+                                            <input type="number" id="passwordMinLength" name="passwordMinLength" class="form-control" min="6" max="20" value="8">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="requireTwoFactor" name="requireTwoFactor">
+                                                <label for="requireTwoFactor">Exigir Autenticação de Dois Fatores</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-switch">
+                                            <input type="checkbox" id="allowPasswordReset" name="allowPasswordReset" checked>
+                                            <label for="allowPasswordReset">Permitir Redefinição de Senha</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-shield-alt"></i>
+                                            Salvar Configurações de Segurança
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Notification Settings -->
+                        <div class="tab-content" id="notifications">
+                            <div class="settings-section">
+                                <h2>Configurações de Notificação</h2>
+                                <p>Configure como e quando receber notificações.</p>
+
+                                <form id="notificationSettingsForm">
+                                    <div class="form-group">
+                                        <h3>Tipos de Notificação</h3>
+                                        <div class="notification-types">
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="emailNotificationsToggle" name="emailNotifications" checked>
+                                                <label for="emailNotificationsToggle">Notificações por Email</label>
+                                            </div>
+
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="pushNotifications" name="pushNotifications">
+                                                <label for="pushNotifications">Notificações Push</label>
+                                            </div>
+
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="smsNotifications" name="smsNotifications">
+                                                <label for="smsNotifications">Notificações por SMS</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="notificationFrequency">Frequência de Notificações</label>
+                                        <select id="notificationFrequency" name="notificationFrequency" class="form-control">
+                                            <option value="immediate">Imediata</option>
+                                            <option value="hourly">Por Hora</option>
+                                            <option value="daily">Diária</option>
+                                            <option value="weekly">Semanal</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-bell"></i>
+                                            Salvar Configurações de Notificação
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- System Settings -->
+                        <div class="tab-content" id="system">
+                            <div class="settings-section">
+                                <h2>Configurações do Sistema</h2>
+                                <p>Configure as opções avançadas do sistema.</p>
+
+                                <form id="systemSettingsForm">
+                                    <div class="form-group">
+                                        <h3>Estado do Sistema</h3>
+                                        <div class="system-switches">
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="maintenanceMode" name="maintenanceMode">
+                                                <label for="maintenanceMode">Modo de Manutenção</label>
+                                            </div>
+
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="debugMode" name="debugMode">
+                                                <label for="debugMode">Modo de Debug</label>
+                                            </div>
+
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="cacheEnabled" name="cacheEnabled" checked>
+                                                <label for="cacheEnabled">Cache Ativado</label>
+                                            </div>
+
+                                            <div class="form-switch">
+                                                <input type="checkbox" id="backupEnabled" name="backupEnabled" checked>
+                                                <label for="backupEnabled">Backup Automático</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="logLevel">Nível de Log</label>
+                                        <select id="logLevel" name="logLevel" class="form-control">
+                                            <option value="debug">Debug</option>
+                                            <option value="info" selected>Info</option>
+                                            <option value="warning">Warning</option>
+                                            <option value="error">Error</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-server"></i>
+                                            Salvar Configurações do Sistema
+                                        </button>
+                                        <button type="button" class="btn btn-warning" onclick="clearCache()">
+                                            <i class="fas fa-trash"></i>
+                                            Limpar Cache
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Backup Settings -->
+                        <div class="tab-content" id="backup">
+                            <div class="settings-section">
+                                <h2>Configurações de Backup</h2>
+                                <p>Configure as opções de backup e restauração.</p>
+
+                                <form id="backupSettingsForm">
+                                    <div class="form-group">
+                                        <div class="form-switch">
+                                            <input type="checkbox" id="autoBackup" name="autoBackup" checked>
+                                            <label for="autoBackup">Backup Automático</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="backupFrequency">Frequência de Backup</label>
+                                            <select id="backupFrequency" name="backupFrequency" class="form-control">
+                                                <option value="daily">Diário</option>
+                                                <option value="weekly" selected>Semanal</option>
+                                                <option value="monthly">Mensal</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="retentionDays">Retenção (dias)</label>
+                                            <input type="number" id="retentionDays" name="retentionDays" class="form-control" min="7" max="365" value="30">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="backupLocation">Local de Backup</label>
+                                        <select id="backupLocation" name="backupLocation" class="form-control">
+                                            <option value="local" selected>Local</option>
+                                            <option value="cloud">Nuvem</option>
+                                            <option value="both">Ambos</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i>
+                                            Salvar Configurações de Backup
+                                        </button>
+                                        <button type="button" class="btn btn-success" onclick="createBackup()">
+                                            <i class="fas fa-database"></i>
+                                            Criar Backup Agora
+                                        </button>
+                                        <button type="button" class="btn btn-warning" onclick="restoreBackup()">
+                                            <i class="fas fa-upload"></i>
+                                            Restaurar Backup
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="settings-section">
+                                <h3>Gerenciar Configurações</h3>
+                                <div class="config-actions">
+                                    <button class="btn btn-outline-primary" onclick="exportSettings()">
+                                        <i class="fas fa-download"></i>
+                                        Exportar Configurações
+                                    </button>
+                                    <button class="btn btn-outline-primary" onclick="importSettings()">
+                                        <i class="fas fa-upload"></i>
+                                        Importar Configurações
+                                    </button>
+                                    <button class="btn btn-outline-danger" onclick="resetSettings()">
+                                        <i class="fas fa-undo"></i>
+                                        Resetar para Padrão
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Restore Backup Modal -->
+    <div class="modal" id="restoreBackupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Restaurar Backup</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="backupFile">Selecione o arquivo de backup</label>
+                    <input type="file" id="backupFile" class="form-control" accept=".backup,.sql,.json">
+                </div>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Atenção:</strong> Esta ação irá sobrescrever todos os dados atuais do sistema.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Cancelar</button>
+                <button class="btn btn-warning">
+                    <i class="fas fa-upload"></i>
+                    Restaurar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/settings.js"></script>
+</body>
+</html>
